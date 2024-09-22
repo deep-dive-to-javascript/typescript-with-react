@@ -28,6 +28,7 @@
   - [드림코딩 앨리: 자바스크립트의 역사](https://youtu.be/wcsVjmHrUQg?si=8F0EjjiavCqS4jGm) -> [요약한 블로그](https://dev-ellachoi.tistory.com/m/102)
 
 3. 웹사이트에서 웹 애플리케이션으로의 전환
+
 **웹사이트**
 - 단방향으로 정보를 제공하는 정적인 페이지
 
@@ -388,6 +389,7 @@ function email({ person, subject, body }: { person: Person; subject: string; bod
 ```
 
 - 타입스크립트에는 값과 타입 공간에 동시에 존재하는 심볼도 있음 
+
 **클래스**
 - 값인 동시에 타입으로도 사용되어 값과 타입 공간 모두에 포함될 수 있음
 
@@ -543,6 +545,7 @@ validateInputText(loaded_text as string);
 ```
 
 ### 2.3 원시 타입
+
 **원시 값과 원시 래퍼 객체**
 - String, Number 등과 같은 원시 래퍼 객체가 존재하므로 이러한 원시값을 파스칼 표기법으로 쓰지 않도록 주의
 

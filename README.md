@@ -20,14 +20,12 @@
 
 - 스터디는 매주 일요일 20시 30분에 진행됩니다.
 - ~토요일
-  - 정해진 분량 만큼 책을 읽은 후 정리하여 업로드 합니다.
   - 이전 챕터 질문에 대한 답변을 작성합니다.
 - 일요일
+  - 정해진 분량 만큼 책을 읽은 후 정리하여 업로드 합니다.
+  - 해당 챕터에 대한 질문을 이슈로 생성합니다.(1인 1질문, 중복 불가능)
   - 이전 챕터 질문에 대한 답변을 정리합니다.
   - 발표자가 해당 챕터에 대한 발표를 진행합니다.
-  - 챕터에 대해 미리 준비해온 질문들을 공유합니다.
-    <br />
-    (질문 중 4~5개 정도만 추려서 업로드)
 
 </div>
 
@@ -50,7 +48,8 @@
 </tr>
 <tr>
 <td align="center">9/22(일)</td>
-<th align="left">1장~2장</th>
+<th align="center">1장~2장</th>
+<td><a href="https://github.com/deep-dive-everything/typescript-with-react/tree/main/1%EC%A3%BC%EC%B0%A8">정리</a></td>
 <td>권현경</td>
 </tr>
 <tr>
@@ -58,7 +57,8 @@
 </tr>
 <tr>
 <td align="center">9/29(일)</td>
-<th align="left">3장</th>
+<th align="center">3장</th>
+<td>정리</td>
 <td>박결</td>
 </tr>
 <tr>
@@ -66,7 +66,8 @@
 </tr>
 <tr>
 <td align="center">10/9(수)</td>
-<th align="left">4장</th>
+<th align="center">4장</th>
+<td>정리</td>
 <td>고석영</td>
 </tr>
 
@@ -75,7 +76,8 @@
 </tr>  
 <tr>
 <td align="center">10/13(일)</td>
-<th align="left">5장</th>
+<th align="center">5장</th>
+<td>정리</td>
 <td>김해리</td>
 </tr>
 <tr>
@@ -83,7 +85,8 @@
 </tr>
 <tr>
 <td align="center">10/20(일)</td>
-<th align="left">6장</th>
+<th align="center">6장</th>
+<td>정리</td>
 <td>권현경</td>
 </tr>
 <tr>
@@ -91,7 +94,8 @@
 </tr>
 <tr>
 <td align="center">10/27(일)</td>
-<th align="left">7장</th>
+<th align="center">7장</th>
+<td>정리</td>
 <td>이여진</td>
 </tr>
 <tr>
@@ -99,7 +103,8 @@
 </tr>
 <tr>
 <td align="center">11/3(일)</td>
-<th align="left">8장</th>
+<th align="center">8장</th>
+<td>정리</td>
 <td>박다솜</td>
 </tr>
 <tr>
@@ -107,7 +112,8 @@
 </tr>
 <tr>
 <td align="center">11/10(일)</td>
-<th align="left">9장</th>
+<th align="center">9장</th>
+<td>정리</td>
 <td>박결</td>
 </tr>
 <tr>
@@ -115,7 +121,8 @@
 </tr>
 <tr>
 <td align="center">11/17(일)</td>
-<th align="left">10장</th>
+<th align="center">10장</th>
+<td>정리</td>
 <td>고석영</td>
 </tr>
 <tr>
@@ -123,7 +130,8 @@
 </tr>
 <tr>
 <td align="center">11/24(일)</td>
-<th align="left">11장</th>
+<th align="center">11장</th>
+<td>정리</td>
 <td>김해리</td>
 </tr>
 <tr>
@@ -131,7 +139,8 @@
 </tr>
 <tr>
 <td align="center">12/8(일)</td>
-<th align="left">12장</th>
+<th align="center">12장</th>
+<td>정리</td>
 <td>권현경</td>
 </tr>
 <tr>
@@ -139,7 +148,8 @@
 </tr>
 <tr>
 <td align="center">12/15(일)</td>
-<th align="left">13장</th>
+<th align="center">13장</th>
+<td>정리</td>
 <td>이여진</td>
 </tr>
 </tbody>
@@ -148,7 +158,7 @@
 <br />
 
 
-## 🫡 스터디원 
+## 💕 스터디원 
 
 <table>
 <tbody>

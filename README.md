@@ -58,7 +58,7 @@
 <tr>
 <td align="center">9/29(일)</td>
 <th align="center">3장</th>
-<td>정리</td>
+<td><a href="https://github.com/deep-dive-everything/typescript-with-react/tree/main/2%EC%A3%BC%EC%B0%A8">정리</a></td>
 <td>박결</td>
 </tr>
 <tr>

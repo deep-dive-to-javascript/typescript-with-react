@@ -487,7 +487,7 @@ type ExcludeOne<T> = { [P in keyof T]: Partial<Record<Exclude<keyof T, P>, undef
 1. [P in keyof T]에서 T는 객체로 가정하기 때문에 P는 T 객체의 키값을 말한다.
 2. Exclude<keyof T, P>는 T 객체가 가진 키값에서 P 타입과 일치하는 키값을 제외한다. 이 타입을 A라고 하자.
 3. Record<A, undefined>는 키로 A 타입을, 값으로 undefined 타입을 갖는 레코드 타입이다. 즉, 전달 받은 객체 타입을 모두 { [key]: undefined } 형태로 만든다. 이 타입을 B라고 하자.
-4. Partial<B>는 B 타입을 옵셔널로 만든다. 따라서 { [key]?: undefined }와 같다.
+4. Partial는 B 타입을 옵셔널로 만든다. 따라서 { [key]?: undefined }와 같다.
 5. 최종적으로 [P in keyof T]로 매핑된 타입에서 동일한 객체의 키값인 [keyof T]로 접근하기 때문에 4번 타입이 반환된다.
 
 앞의 속성을 활용해 PickOne타입을 표현할 수 있음.

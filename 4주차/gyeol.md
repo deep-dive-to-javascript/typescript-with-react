@@ -384,3 +384,445 @@
       [P in keyof T]: Record<P, T[P]> & Partial<Record<Exclude<keyof T, P>, undefined>>;
     }[keyof T];
     ```
+    
+**📌 PickOne 살펴보기**
+
+- PickOne 타입을 `One<T>`과 `ExcludeOne<T>`로 분리해서 생각 할 수 있음
+(T에는 객체가 들어 온다고 가정하고 진행)
+    - `One<T>`
+    
+    ```tsx
+    type One<T> = { [P in keyof T]: Record<P, T[P]> }[keyof T];
+    /*
+    [P in keyof T] - T는 객체로 가정하기 때문에 P는 T 객체의 키값을 의미
+    Record<P, T[P]> - P타입을 키로 가지고 value는 P를 키로 둔 T 객체의 값 레코드 타입
+    { [P in keyof T]: Record<P, T[P]> } 
+    - 키는 T 객체의 키 모음. value는 해당 키의 원본 객체  T
+    마지막에 다시 [keyof T]의 키값으로 접근하기 때문에 최종 결과는 전달받은 T와 같음
+    */
+    ```
+    
+    - `ExcludeOne<T>`
+    
+    ```tsx
+    type ExcludeOne<T> = { 
+    	[P in keyof T]: Partial<Record<Exclude<keyof T, P>, undefined>>
+    }[keyof T];
+    /*
+    [P in keyof T] - T는 객체로 가정하기 때문에 P는 T 객체의 키값을 의미
+    Exclude<keyof T, P> - T객체가 가진 키값에서 P타입과 일치하는 값을 제외함(A타입이라 가정)
+    Record<A, undefined> - 키로 A타입을, 값으로 undefined 타입을 갖는 레코드 타입
+    -> 전달 받은 객체 타입을 모두 {[key]:undefined} 형태로 만듦(B타입이라 가정)
+    Partial<B> - B타입을 옵셔널로 만듦
+    -> {[key]?:undefined} 와 같음 
+    최종적으로 [P in keyof T]로 매핑된 타입에서 동일한 객체의 키값인 
+    [keyof T]로 접근하기 때문에 Partial<B> 타입이 반환됨
+    */
+    ```
+    
+- 결론적으로 얻고자 하는 타입은 속성 하나와 나머지는 옵셔널+undefined인 타입이므로 앞의 속성을 활용하여 PickOne 타입 표현이 가능함
+    
+    ```tsx
+    type PickOne<T> = One<T> & ExcludeOne<T>;
+    // One<T> & ExcludeOne<T> 는 [P in keyof T]를 공통으로 가지므로 아래와 같음
+    [P in keyof T]: Record<P, T[P]> & Partial<Record<Exclude<keyof T, P>, undefined>>
+    // 전달된 T타입의 1개의 키는 값을 가지고 있으며
+    // 나머지 키는 옵셔널한 undefined 값을 가진 객체를 의미함
+    ```
+    
+
+**📌 PickOne 타입 적용하기**
+
+- PickOne 타입을 활용해서 앞의 코드 수정
+    
+    ```tsx
+    type Card = {
+    	card: string
+    };
+    type Account = {
+    	account: string
+    };
+    // PickOne 커스텀 함수구현
+    type PickOne<T> = {
+      [P in keyof T]: Record<P, T[P]> & Partial<Record<Exclude<keyof T, P>, undefined>>;
+    }[keyof T];
+    
+    type CardOrAccount = PickOne<Card & Account>; 
+    
+    function withdraw(type:CardOrAccount){
+    	// ...
+    }
+    withdraw({ card: "hyundai", account: "hana" }); // error
+    ```
+    
+    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/7d5bae4c-3419-4df1-a2d1-d33c9f921884/f8dd1e59-022d-460d-a5c7-39f42cb881c1/image.png)
+    
+    - withdraw({ card: "hyundai", account: "hana" }) 부분에서 타입 에러가 발생
+- 이처럼 유틸리티 타입으로 원하는 타입을 추출하기 어려울 때 커스텀 유틸리티 타입을 구현
+- 커스텀 유틸리티 타입 구현 팁
+    - 정확히 어떤 타입을 구현해야하는지 파악하기
+    - 필요한 타입을 작은 단위로 쪼개어 생각하여 단계적으로 구현하기
+
+### 3. NonNullable 타입 검사 함수를 사용하여 간편하게 타입 가드하기
+
+- null을 가질 수 있는 값의 null 처리는 자주 사용되는 타입 가드 패턴 중 하나
+- 일반적으로 if문을 사용해서 null 처리 타입 가드를 적용함
+- is 키워드와 NonNullable 타입으로 타입 검사를 위한 유틸 함수를 만들 수도 있음
+
+**📌 NonNullable 타입이란**
+
+- 타입스크립트에서 제공하는 유틸리티 타입
+- **제네릭으로 받는 T가 null 또는 undefined일 때 never 또는 T를 반환하는 타입**
+- NonNullable을 통해 null이나 undefined가 아닌 경우를 제외할 수 있음
+    
+    ```tsx
+    type NonNullable<T> = T extends null | undefined ? never : T;
+    ```
+    
+
+**📌 null, undefiend를 검사해주는 NonNullable 함수**
+
+- NonNullable 유틸리티 타입을 통해 타입 가드 함수를 만들 수 있음
+- NonNullable 함수
+    - 매개변수인 value가 null 또는 undefined라면 false를 반환
+    - is키워드로 인해 NonNullable 함수를 사용하는 쪽에서 true가 반환된다면 넘겨준 인자는 null이나 undefined가 아닌 타입으로 타입 가드가 됨(타입이 좁혀짐)
+    
+    ```tsx
+    function NonNullable<T>(value: T): value is NonNullable<T> {
+    	return value !== null && value !== undefined;
+    }
+    ```
+    
+
+**📌 Promise.all을 사용할 때 NonNullable 적용하기**
+
+- 예시
+    
+    ```tsx
+    // shopNumber(상품번호)에 따라 응답값을 반환하는 광고 조회 API
+    class AdCampaignAPI {
+      static async operating(shopNo: number):Promise<AdCampaign[]>{
+        try{
+          return await fetch(`/ad/shopNumber=${shopNo}`);
+        }catch(error){
+          return null;
+          // 여러 상품의 광고 조회시 하나의 API에서 에러가 발생한다고 해서
+          // 전체 광고가 보이지 않으면 안되니 null 반환 
+        }
+      }
+    }
+    // AdCampaignAPI를 사용해서 여러 상품의 광고를 받아오는 로직(Promise.All 사용)
+    const shopList = [
+      {shopNo:100,category:'chicken'},
+      {shopNo:101,category:'pizza'},
+      {shopNo:102,category:'noodle'},
+    ];
+    
+    const shopAdCampaignList = await Promise.all(shopList.map((shop) 
+    	=> AdCampaignAPI.operating(shop.shopNo))
+    );
+    ```
+    
+    - `AdCampaignAPI.operating`  함수에서 null을 반환할 수도 있기 때문에 
+    shopAdCampaignList의 타입은 **`Array<AdCampaign[] | null>`**
+    - shopAdCampaignList 변수를 순회할 때(e.g map or forEach) 고차 함수 내부 콜백함수에서 if을 사용한 타입 가드를 반복하게됨
+    - NonNullable을 사용하지 않고 단순하게 필터링할 경우
+        
+        **[shopAdCampaignList.filter((shop)=>!!shop)]** 타입은 Array<AdCampaign[]>이 아닌 `Array<AdCampaign[] | null>` 로 추론됨.
+        
+    - NonNullable 사용하기
+        
+        ```tsx
+        const shopAdCampaignList = await Promise.all(shopList.map((shop) 
+        	=> AdCampaignAPI.operating(shop.shopNo))
+        );
+        const shopAds = shopAdCampaignList .filter(NonNullable);
+        // shopAds의 타입은 Array<AdCampaign[]>으로 추론됨
+        ```
+        
+
+## 5.4 불변 객체 타입으로 활용하기
+
+- 상숫값을 관리할 때 객체를 사용
+e.g. theme 객체(프로젝트의 전체적인 스타일을 관리), 상숫값을 담은 객체 등
+- 컴포넌트나 함수에서 이런 객체를 사용할 때 열린타입으로 설정할 수 있음
+- 예시 - 함수인자로 key를 받아서 value를 반환하는 함수
+    
+    ```tsx
+    const colors = {
+      red: '#ff0000',
+      green:'#186a3b',
+      blue:'#2471a3'
+    };
+    
+    const getColorHex = (key: string)=> colors[key];
+    //Element implicitly has an 'any' type because expression of type 'string' 
+    // can't be used to index type '{ red: string; green: string; blue: string; }'.
+    ```
+    
+    - 키 타입을 해당 객체에 존재하는 키 값이 아닌 string으로 설정하면 colors에 어떤 값이 추가될지 모르기 때문에  getColorHex의 반환 값의 타입은 any가 됨
+    - 이런 경우 `as const` 키워드로 객체를 불변 객체로 선언하고 `keyof` 연산자로 getColorHex 함수 인자로 실제 colors 객체에 존재하는 키 값만 받도록 설정 가능
+
+### 1. Atom 컴포넌트에서 theme style 객체 활용하기
+
+- Atom 컴포넌트(e.g. Button, Header, Input 등)는 폰트 크기, 색상 등 다양한 환경에서 유연하게 사용될 수 있도록 구현해야하며 관련 설정값은 props로 넘겨주도록 설계함
+    
+    하지만 props를 통해 값을 직접 넘겨줄 경우 사용자가 모든 색상 값을 인지해야 하며 변경 사항이 생길 때마다 모두 수정해야 함
+    
+    → **이런 문제를 해결하기 위해 해당 프로젝트의 스타일 값을 관리하는 theme 객체로 관리**
+    
+- **Atom 컴포넌트에서는 theme 객체의 색상, 폰트 사이즈의 키값을 props로 받은 뒤 theme 객체에서 값을 받아오도록 설계함**
+- 예시 - 컴포넌트에서 props의 color, fontSize 값의 타입을 string 으로 설정한 경우
+    
+    ```tsx
+    interface Props{
+      fontSize ?: string;
+      backgroundColor?: string;
+      color?: string;
+      onClick:(event:React.MouseEvent<HTMLButtonElement>) => void | Promise<void>;
+    }
+    
+    const Button: FC<Props> = ({fontSize, backgroundColor, color, children }) => {
+    	return (
+    		<ButtonWrap
+    			fontSize={fontSize}
+    			backgroundColor={backgroundColor}
+    			color={color}
+    		>
+    			{children }
+    		</ButtonWrap>
+    	);
+    };
+    
+    const ButtonWrap = styled.button<Omit<Props, "onClick">>`
+    	color: ${({color})=> theme.color[color ?? "default"]};
+    	background-color: ${({backgroundColor})=> 
+    		theme.backgroundColor[backgroundColor?? "default"]};
+    	font-size: ${({fontSize})=> theme.fontSize[fontSize?? "default"]};
+    `;
+    ```
+    
+    - Button 컴포넌트의 props로 color, backgroundColor 등을 넘겨줄 때 키 값이 자동 완성되지 않음
+    - 잘못된 키값을 넣어도 에러가 발생하지 않음
+        
+        **⇒ theme 객체로 타입을 구체화해서 해결 가능**
+        
+
+### 타입스크립트 keyof 연산자로 객체의 키값을 타입으로 추출하기
+
+- `keyof` 연산자
+    - 객체 타입을 받아 해당 객체의 키값을 string 또는 number의 리터럴 유니온 타입을 반환
+    - 객체 타입으로 인덱스 시그니처가 사용되었다면, 인덱스 시그니처의 키 타입 반환
+- ColorType 객체 타입의 keyof ColorType을 사용하면 객체의 키 값들이 유니온으로 나오게 됨
+    
+    ```tsx
+    interface ColorType {
+        red:string;
+        green:string;
+        blue:string;
+    }
+    
+    type ColorKeyType = keyof ColorType; // 'red' | 'green' | 'blue'
+    ```
+    
+
+### 타입스크립트 typeof 연산자로 값을 타입으로 다루기
+
+- keyof 연산자는 객체 타입을 받음 
+→ 객체의 키값을 타입으로 다루기 위해선 값 객체를 타입으로 변환 필요. 이 때 typeof 연산자를 활용
+- 자바스크립트의 typeof
+    - 타입을 추출하기 위한 연산자로 사용
+- 타입스크립트의 typeof
+    - **변수 혹은 속성의 타입을 추론하기 위해 사용**
+    - 주로 ReturnType같이 유틸리티 타입이나 keyof 연산자같이 타입을 받는 연산자와 함께 쓰임
+- typeof로 colors 객체의 타입을 추론한 결과
+    
+    ```tsx
+    const colors = {
+      red: '#ff0000',
+      green:'#186a3b',
+      blue:'#2471a3'
+    };
+    type ColorsType = typeof colors;
+    /*
+    {
+    	red: string;
+      green: string;
+      blue: string;
+    }
+    */
+    ```
+    
+
+### 객체의 타입을 활용해서 컴포넌트 구현하기
+
+- keyof, typeof 연산자를 통해 theme 객체 타입을 구체화하고 string 타입을 설정했던 Button 컴포넌트 개선하기
+    
+    ```tsx
+    import React, { FC } from "react";
+    import styled from "styled-components";
+    
+    const colors = {
+      black: "#000000",
+      gray: "#222222",
+      white: "#FFFFFF",
+      mint: "#2AC1BC",
+    };
+    
+    const theme = {
+      colors: {
+        default: colors.gray,
+        ...colors
+      },
+      backgroundColors: {
+        default: colors.white,
+        gray: colors.gray,
+        mint: colors.mint,
+        black: colors.black,
+      },
+      fontSize: {
+        default: "16px",
+        small: "14px",
+        large: "18px",
+      },
+    };
+    
+    type ColorType = keyof typeof theme.colors;
+    type BackgroundColorType = keyof typeof theme.backgroundColors;
+    type FontSizeType = keyof typeof theme.fontSize;
+    
+    interface Props {
+      color?: ColorType;
+      backgroundColor?: BackgroundColorType;
+      fontSize?: FontSizeType;
+      children?: React.ReactNode;
+      onClick: (event: React.MouseEvent<HTMLButtonElement>) => void | Promise<void>;
+    }
+    
+    const Button: FC<Props> = ({ fontSize, backgroundColor, color, children }) => {
+      return (
+        <ButtonWrap
+          fontSize={fontSize}
+          backgroundColor={backgroundColor}
+          color={color}
+        >
+          {children}
+        </ButtonWrap>
+      );
+    };
+    
+    const ButtonWrap = styled.button<Omit<Props, "onClick">>`
+      color: ${({ color }) => theme.colors[color ?? "default"]};
+      background-color: ${({ backgroundColor }) =>
+        theme.backgroundColors[backgroundColor ?? "default"]};
+      font-size: ${({ fontSize }) => theme.fontSize[fontSize ?? "default"]};
+    `;
+    ```
+    
+    - 이처럼 여러 상숫값을 인자나 props로 받은 후 객체의 키 값을 추출한 타입을 활용하면 객체에 접근시  타입스크립트의 도움을 받아 실수를 방지할 수 있음
+
+## 5.5 Record 원시 타입 키 개선하기
+
+- **`Record<Keys, Type>`**
+    - Record는 Keys로 이루어진 object타입을 만드는데, 각 프로퍼티들이 전달받은 Type이 됨
+    
+    ```tsx
+    interface CatInfo {
+      age: number;
+      breed: string;
+    }
+     
+    type CatName = "miffy" | "boris" | "mordred";
+     
+    const cats: Record<CatName, CatInfo> = {
+      miffy: { age: 10, breed: "Persian" },
+      boris: { age: 5, breed: "Maine Coon" },
+      mordred: { age: 16, breed: "British Shorthair" }
+    };
+    // cats는 CatName으로 이루어진 Object
+    // 각 프로퍼티들은 CatInfo 타입
+    ```
+    
+- 객체 선언 시 키가 명확하지 않다면 Record의 키를 string이나 number 같은 원시타입으로 명시하곤 함
+→ 이 경우 타입스크립트는 키가 유효하지 않아도 타입상 문제가 없기 때문에 오류 표시를 하지 않지만 런타임 에러가 발생할 수 있음
+- Record를 명시적으로 사용하는 방안에 대해 알아보자
+
+### 1. 무한한 키를 집합으로 가지는 Record
+
+- 예시
+    
+    ```tsx
+    type Category = string; // 원시 타입으로 선언 
+    interface Food {
+      name: string;
+    }
+    const foodByCategory: Record<Category, Food[]> = {
+      한식:[{name:'제육덮밥'}, {name:'뚝불'}],
+      일식:[{name:'초밥'}, {name:'라멘'}],
+    }
+    
+    console.log(foodByCategory['한식'])
+    console.log(foodByCategory['양식']) // Food[]로 추론
+    foodByCategory['양식'].map((food)=> console.log(food.name));
+    // 위코드는 컴파일시 타입에러 발생 X
+    // 하지만 런타임에서 undefined가 되어 오류를 반환
+    ```
+    
+    - string 타입인 Category를 Record의 키로 사용하는 foodByCategory 객체는 무한한 키 집합을 가짐
+    - foodByCategory 객체에 없는 키값을 사용하더라도(e.g. 양식) 타입스크립트는 오류를 표시하지 않음. 하지만 런타임에서 undefined가 되어 오류를 반환하게됨
+    - 이 경우 자바스크립트의 옵셔널 체이닝 등을 사용하면 런타임 에러를 방지할 수 있음
+    → 그러나 undefined일 수 있는 값을 일일이 판단해서 적용해야하므로 불편함
+
+### 2. 유닛 타입으로 변경하기
+
+- 키가 유한한 집합이라면 유닛타입을 사용하면 됨
+    
+    ```tsx
+    type Category = '한식" | "일식";
+    // ...
+    console.log(foodByCategory['양식']);
+    // error: Property '양식' does not exist on type 'Record<Category, Food[]>'
+    ```
+    
+- 키가 무한해야 하는 상황에는 부적합
+
+### 3. Partial을 활용하여 정확한 타입 표현하기
+
+- **`Partial<Type>`**
+    - 전달 받은 Type의 모든 하위 집합을 나타내는 타입을 생성
+    - 특정 타입의 부분 집합을 만족하는 타입 정의 가능
+    
+    ```tsx
+    interface Address {
+      email: string;
+      address: string;
+    }
+    
+    type MyEmail = Partial<Address>;
+    const me: MyEmail = {}; // ok
+    const you: MyEmail = { email: "you@gmail.com" }; // ok
+    const all: MyEmail = { email: "all@gmail.com", address: "seoul" }; // ok
+    ```
+    
+- 키가 무한한 경우 Partial을 사용하면 해당 값이 undefind일 수 있는 상태임을 표현 가능
+- 객체 값이 undefined일 수 있는 경우 Partial을 사용해서 PartialRecord 타입을 선언하고 객체 선언시 활용
+     ```tsx
+    type PartialRecord<K extends string, T> = Partial<Record<K, T>>;
+    type Category = string;
+    interface Food {
+        name: string;
+    }
+    
+    const foodByCategory: PartialRecord<Category, Food[]> = {
+        한식:[{name:'제육덮밥'}, {name:'뚝불'}],
+        일식:[{name:'초밥'}, {name:'라멘'}],
+    }
+    
+    console.log(foodByCategory['한식']);
+    console.log(foodByCategory['양식']); // Food[] or undefined 타입으로 추론
+    foodByCategory['양식'].map((food)=> console.log(food.name));
+    // object is possibly 'undefined'
+    foodByCategory['양식']?.map((food)=> console.log(food.name));
+    // 타입스크립트가 개발자에게 값을 처리하라고 표시해줌
+    // 옵셔널 체이닝 or 조건문을 사용하면 사전에 조치 가능
+    ```

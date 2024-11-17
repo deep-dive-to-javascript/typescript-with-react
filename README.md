@@ -67,7 +67,7 @@
 <tr>
 <td align="center">10/9(수)</td>
 <th align="center">4장</th>
-<td>정리</td>
+<td><a href="https://github.com/deep-dive-everything/typescript-with-react/tree/main/3%EC%A3%BC%EC%B0%A8">정리</a></td>
 <td>고석영</td>
 </tr>
 
@@ -77,7 +77,7 @@
 <tr>
 <td align="center">10/13(일)</td>
 <th align="center">5장</th>
-<td>정리</td>
+<td><a href="https://github.com/deep-dive-everything/typescript-with-react/tree/main/4%EC%A3%BC%EC%B0%A8">정리</a></td>
 <td>김해리</td>
 </tr>
 <tr>
@@ -86,7 +86,7 @@
 <tr>
 <td align="center">10/20(일)</td>
 <th align="center">6장</th>
-<td>정리</td>
+<td><a href="https://github.com/deep-dive-everything/typescript-with-react/tree/main/5%EC%A3%BC%EC%B0%A8">정리</a></td>
 <td>권현경</td>
 </tr>
 <tr>
@@ -95,7 +95,7 @@
 <tr>
 <td align="center">10/27(일)</td>
 <th align="center">7장</th>
-<td>정리</td>
+<td><a href="https://github.com/deep-dive-everything/typescript-with-react/tree/main/6%EC%A3%BC%EC%B0%A8">정리</a></td>
 <td>이여진</td>
 </tr>
 <tr>
@@ -104,7 +104,7 @@
 <tr>
 <td align="center">11/3(일)</td>
 <th align="center">8장</th>
-<td>정리</td>
+<td><a href="https://github.com/deep-dive-everything/typescript-with-react/tree/main/7%EC%A3%BC%EC%B0%A8">정리</a></td>
 <td>박다솜</td>
 </tr>
 <tr>
@@ -113,7 +113,7 @@
 <tr>
 <td align="center">11/10(일)</td>
 <th align="center">9장</th>
-<td>정리</td>
+<td><a href="https://github.com/deep-dive-everything/typescript-with-react/tree/main/8%EC%A3%BC%EC%B0%A8">정리</a></td>
 <td>박결</td>
 </tr>
 <tr>
@@ -122,33 +122,24 @@
 <tr>
 <td align="center">11/17(일)</td>
 <th align="center">10장</th>
-<td>정리</td>
+<td><a href="https://github.com/deep-dive-everything/typescript-with-react/tree/main/9%EC%A3%BC%EC%B0%A8">정리</a></td>
 <td>고석영</td>
 </tr>
 <tr>
 <td align="center" colspan="5">10주차</td>
 </tr>
 <tr>
-<td align="center">11/24(일)</td>
-<th align="center">11장</th>
+<td align="center">12/1(일)</td>
+<th align="center">11장~12장</th>
 <td>정리</td>
-<td>김해리</td>
+<td>김해리,권현경</td>
 </tr>
 <tr>
 <td align="center" colspan="5">11주차</td>
 </tr>
 <tr>
-<td align="center">12/8(일)</td>
-<th align="center">12장</th>
-<td>정리</td>
-<td>권현경</td>
-</tr>
-<tr>
-<td align="center" colspan="5">12주차</td>
-</tr>
-<tr>
 <td align="center">12/15(일)</td>
-<th align="center">13장</th>
+<th align="center">12장</th>
 <td>정리</td>
 <td>이여진</td>
 </tr>

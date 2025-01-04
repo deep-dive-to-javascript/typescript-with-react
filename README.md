@@ -131,7 +131,7 @@
 <tr>
 <td align="center">12/1(일)</td>
 <th align="center">11장~12장</th>
-<td>정리</td>
+<td><a href="https://github.com/deep-dive-everything/typescript-with-react/tree/main/10%EC%A3%BC%EC%B0%A8">정리</a></td>
 <td>김해리,권현경</td>
 </tr>
 <tr>
@@ -140,7 +140,7 @@
 <tr>
 <td align="center">12/15(일)</td>
 <th align="center">12장</th>
-<td>정리</td>
+<td><a href="https://github.com/deep-dive-everything/typescript-with-react/tree/main/11%EC%A3%BC%EC%B0%A8">정리</a></td>
 <td>이여진</td>
 </tr>
 </tbody>
